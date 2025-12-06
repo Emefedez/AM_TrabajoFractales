@@ -13,7 +13,7 @@ from popups import MethodPopup
 pygame.init()
 pygame.font.init()
 
-width, height = 1024, 720
+width, height = 1200, 760
 screen = pygame.display.set_mode((width, height))
         
         
@@ -44,8 +44,8 @@ font2 = pygame.font.SysFont(None, 100, bold=True)
 console_font = pygame.font.SysFont("monospace", 18)
 
 #Layout de la consola para mostrar los scripts
-console_rect = pygame.Rect(15, 320, 550, 340)
-plot_rect = pygame.Rect(30, 10, 600, 400)
+console_rect = pygame.Rect(15, 420, 550, 320)
+plot_rect = pygame.Rect(10, 10, 590, 460)
 
 #Carga de imágenes
 
@@ -53,11 +53,21 @@ Newton = None
 Halley = None
 Chebyshev = None
 
+# Cargar imágenes de fórmulas
+FormulasNewton = None
+FormulasHalley = None
+FormulasChebyshev = None
 
 if (os.path.isfile("fractal_Newton.png")):
 	Newton = pygame.image.load("fractal_Newton.png").convert_alpha()
 	NewtonScaled = pygame.transform.smoothscale(Newton, (400, 300))
 else: print("No hay fractal por Newton")
+
+if (os.path.isfile("formulas_Newton.png")):
+	FormulasNewton = pygame.image.load("formulas_Newton.png").convert_alpha()
+	FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (1080, 360))
+	FormulasActual = FormulasNewtonScaled
+else: print("No hay fórmulas por Newton")
 
 if (os.path.isfile("fractal_Halley.png")):
 	Halley = pygame.image.load("fractal_Halley.png").convert_alpha()
@@ -72,6 +82,7 @@ else: print("No hay fractal por Chebyshev")
 fractal_rect = pygame.Rect(console_rect.right + 20, 110, width - console_rect.right - 40, 480)
 
 ImagenActual = None
+FormulasActual = None
 
 
 
@@ -82,6 +93,12 @@ ImagenActual = None
 title_surf = font2.render("AM GRUPO 4.4", True, BLACK)
 title_rect = title_surf.get_rect(center=(width // 1.45, 80))
 title_bg_rect = title_rect.inflate(0, 2)
+
+# Rect para fórmulas (debajo del título, centrado)
+formulas_rect = pygame.Rect(0, 0, 540, 180)
+formulas_rect.top = title_rect.bottom + 20
+formulas_rect.centerx = width // 2 +250
+
 
 
 
@@ -157,6 +174,7 @@ def run_script_capture(name: str, example: str = None, show: bool = False):
 
     def reader():
         global Newton, Halley, Chebyshev, ImagenActual
+        global FormulasNewton, FormulasHalley, FormulasChebyshev, FormulasActual
         label = f"{name} ({example})" if example else name
         append_console(f"--- Ejecutando {label} ---")
         try:
@@ -177,10 +195,17 @@ def run_script_capture(name: str, example: str = None, show: bool = False):
                 Newton = pygame.image.load("fractal_Newton.png").convert_alpha()
                 NewtonScaled = pygame.transform.smoothscale(Newton, (400, 300))
                 ImagenActual = NewtonScaled
+                # Cargar fórmulas si existen
+                if os.path.isfile("formulas_Newton.png"):
+                    FormulasNewton = pygame.image.load("formulas_Newton.png").convert_alpha()
+                    FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (540, 180))
+                    FormulasActual = FormulasNewtonScaled
+                    
             elif name == "Halley.py" and os.path.isfile("fractal_Halley.png"):
                 Halley = pygame.image.load("fractal_Halley.png").convert_alpha()
                 HalleyScaled = pygame.transform.smoothscale(Halley, (256, 256))
                 ImagenActual = HalleyScaled
+                
             elif name == "Chebyshev.py" and os.path.isfile("fractal_Chebyshev.png"):
                 Chebyshev = pygame.image.load("fractal_Chebyshev.png").convert_alpha()
                 ChebyshevScaled = pygame.transform.smoothscale(Chebyshev, (256, 256))
@@ -263,6 +288,14 @@ if __name__ == "__main__":
         
         pygame.draw.rect(screen, AZULDEBIAN, title_bg_rect)
         screen.blit(title_surf, title_rect)
+        
+        # Rect de fórmulas (siempre visible con borde)
+        pygame.draw.rect(screen, WHITE, formulas_rect)
+        pygame.draw.rect(screen, BLACK, formulas_rect, 2)
+        
+        # Mostrar fórmulas dentro del rect si existen
+        if FormulasActual is not None:
+            screen.blit(FormulasActual, formulas_rect)
         
         if ImagenActual is not None:
             screen.blit(ImagenActual, plot_rect)

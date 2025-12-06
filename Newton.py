@@ -110,3 +110,33 @@ plt.ylabel("y")
 plt.savefig('fractal_Newton.png', dpi=2000)
 if (args.show is True):
     plt.show()
+
+# Generar imagen con fórmulas legibles
+fig_formulas, ax_formulas = plt.subplots(figsize=(7.2, 2.4), facecolor='white')
+ax_formulas.axis('off')
+ax_formulas.set_xlim(0, 1)
+ax_formulas.set_ylim(0, 1)
+
+# Convertir expresiones sympy a LaTeX
+f_latex = sp.latex(f)
+derf_latex = sp.latex(derf)
+g_latex = sp.latex(g)
+
+# Crear texto con fórmulas
+formulas_text = (
+    r"$\mathbf{Método\ de\ Newton}$" "\n\n"
+    r"$\mathbf{Función:}\ f(z) = " + f_latex + r"$" "\n\n"
+    r"$\mathbf{Derivada:}\ f'(z) = " + derf_latex + r"$" "\n\n"
+    r"$\mathbf{Iteración:}\ g(z) = " + g_latex + r"$"
+)
+
+ax_formulas.text(0.5, 0.5, formulas_text, 
+                 ha='center', va='center', 
+                 fontsize=13, 
+                 transform=ax_formulas.transAxes)
+
+plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+plt.savefig('formulas_Newton.png', dpi=100, bbox_inches='tight', pad_inches=0, facecolor='white')
+plt.close(fig_formulas)
+
+print('Imaxe de fórmulas gardada en: formulas_Newton.png')
