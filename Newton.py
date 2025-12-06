@@ -107,15 +107,13 @@ plt.colorbar()
 plt.xlabel("x")
 plt.ylabel("y")
 
-#A continuación gárdase a imaxen do fractal nun ficheiro: cambiar o nome do 
-#ficheiro según o método usado 
 
 plt.savefig('fractal_Newton.png', dpi=2000)
 if (args.show is True):
     plt.show()
 
-# Generar imagen con fórmulas legibles
-# Ajustamos el tamaño para que sea más vertical (aprox 550x380 px)
+
+
 # Aumentamos DPI para mejor resolución, main.py se encargará de escalar hacia abajo (supersampling)
 fig_formulas, ax_formulas = plt.subplots(figsize=(5.5, 3.8), facecolor='white')
 ax_formulas.axis('off')

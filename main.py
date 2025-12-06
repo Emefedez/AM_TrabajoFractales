@@ -302,6 +302,7 @@ if __name__ == "__main__":
         # 2. Consola
         pygame.draw.rect(screen, GREY, console_rect)
         pygame.draw.rect(screen, BLACK, console_rect, 2)
+        pygame.draw.rect(screen, AZULDEBIAN, title_bg_rect)
         
         with console_lock:
             # Mostrar últimas líneas
@@ -338,7 +339,7 @@ if __name__ == "__main__":
             
             screen.blit(text, text.get_rect(center=rect.center))
             
-        pygame.draw.rect(screen, AZULDEBIAN, title_bg_rect)
+        
         screen.blit(title_surf, title_rect)
 
         # 5. Popups (dibujar encima de todo)
