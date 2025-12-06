@@ -45,7 +45,6 @@ console_font = pygame.font.SysFont("monospace", 18)
 
 #Layout de la consola para mostrar los scripts
 console_rect = pygame.Rect(15, 420, 550, 320)
-plot_rect = pygame.Rect(10, 10, 590, 460)
 
 #Carga de imágenes
 
@@ -60,12 +59,12 @@ FormulasChebyshev = None
 
 if (os.path.isfile("fractal_Newton.png")):
 	Newton = pygame.image.load("fractal_Newton.png").convert_alpha()
-	NewtonScaled = pygame.transform.smoothscale(Newton, (400, 300))
+	NewtonScaled = pygame.transform.smoothscale(Newton, (12800, 9600))
 else: print("No hay fractal por Newton")
 
 if (os.path.isfile("formulas_Newton.png")):
 	FormulasNewton = pygame.image.load("formulas_Newton.png").convert_alpha()
-	FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (1080, 360))
+	FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (12800, 9600))
 	FormulasActual = FormulasNewtonScaled
 else: print("No hay fórmulas por Newton")
 
@@ -79,7 +78,7 @@ if (os.path.isfile("fractal_Chebyshev.png")):
 	ChebyshevScaled = pygame.transform.smoothscale(Chebyshev, (256, 256))
 else: print("No hay fractal por Chebyshev")
 
-fractal_rect = pygame.Rect(console_rect.right + 20, 110, width - console_rect.right - 40, 480)
+fractal_rect = pygame.Rect(605, 110, 25.600, 19200)
 
 ImagenActual = None
 FormulasActual = None
@@ -91,38 +90,39 @@ FormulasActual = None
 
 #TITULO
 title_surf = font2.render("AM GRUPO 4.4", True, BLACK)
-title_rect = title_surf.get_rect(center=(width // 1.45, 80))
+title_rect = title_surf.get_rect(center=(width // 1.37, 560))
 title_bg_rect = title_rect.inflate(0, 2)
 
+
 # Rect para fórmulas (debajo del título, centrado)
-formulas_rect = pygame.Rect(0, 0, 540, 180)
-formulas_rect.top = title_rect.bottom + 20
-formulas_rect.centerx = width // 2 +250
+formulas_rect = pygame.Rect(0, 0, 560, 180)
+formulas_rect.top = 200
+formulas_rect.centerx = width // 2 + 250
 
 
 
 
 # Botones de scripts (posiciones separadas para que no se solapen)
 button_textN = font.render("NEWTON", True, BLACK)
-button_rectN = pygame.Rect(0, 0, 300, 50)
-button_rectN.right = width - 60
-button_rectN.centery = height // 2 - 35
+button_rectN = pygame.Rect(0, 0, 250, 50)
+button_rectN.right = width - 340
+button_rectN.centery = height // 2 + 255
 
 button_textH = font.render("HALLEY", True, BLACK)
-button_rectH = pygame.Rect(0, 0, 300, 50)
+button_rectH = pygame.Rect(0, 0, 250, 50)
 button_rectH.right = width - 60
-button_rectH.centery = height // 2 + 35
+button_rectH.centery = height // 2 + 255
 
 button_textC = font.render("CHEBYSHEV", True, BLACK)
-button_rectC = pygame.Rect(0, 0, 300, 50)
-button_rectC.right = width - 60
-button_rectC.centery = height // 2 + 105
+button_rectC = pygame.Rect(0, 0, 250, 50)
+button_rectC.right = width - 340
+button_rectC.centery = height // 2 + 310
 
 # Botón QUIT 
-button_textQ = font.render("QUIT", True, BLACK)
-button_rectQ = pygame.Rect(0, 0, 200, 50)
+button_textQ = font.render("SALIR", True, BLACK)
+button_rectQ = pygame.Rect(0, 0, 200, 35)
 button_rectQ.right = width - 60
-button_rectQ.centery = height // 2 + 205
+button_rectQ.centery = height // 2 + 310
 
 #Ajustes para la consola
 
@@ -298,7 +298,7 @@ if __name__ == "__main__":
             screen.blit(FormulasActual, formulas_rect)
         
         if ImagenActual is not None:
-            screen.blit(ImagenActual, plot_rect)
+            screen.blit(ImagenActual, fractal_rect)
 
         # Dibujar popup de Newton si está visible
         popup_newton.draw()

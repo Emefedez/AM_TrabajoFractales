@@ -136,7 +136,8 @@ ax_formulas.text(0.5, 0.5, formulas_text,
                  transform=ax_formulas.transAxes)
 
 plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.savefig('formulas_Newton.png', dpi=100, bbox_inches='tight', pad_inches=0, facecolor='white')
+plt.savefig('formulas_Newton.png', dpi=2000, bbox_inches='tight', pad_inches=0, facecolor='white')
+
 plt.close(fig_formulas)
 
 print('Imaxe de fórmulas gardada en: formulas_Newton.png')
