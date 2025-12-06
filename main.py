@@ -15,7 +15,7 @@ pygame.font.init()
 
 width, height = 1200, 760
 screen = pygame.display.set_mode((width, height))
-        
+pygame.display.set_caption("Visualizador de Fractales - AM Grupo 4.4")
         
 # Colores
 BLACK = (0, 0, 0)
@@ -39,121 +39,114 @@ colors = {
 }
 
 # FUENTE
-font = pygame.font.SysFont(None, 50, bold=False)
-font2 = pygame.font.SysFont(None, 100, bold=True)
-console_font = pygame.font.SysFont("monospace", 18)
+font = pygame.font.SysFont(None, 40, bold=False)
+font_title = pygame.font.SysFont(None, 90, bold=True)
+font_btn = pygame.font.SysFont(None, 36, bold=True)
+console_font = pygame.font.SysFont("monospace", 16)
 
-#Layout de la consola para mostrar los scripts
-console_rect = pygame.Rect(15, 420, 550, 320)
+# --- LAYOUT ---
 
-#Carga de imágenes
+# Columna Izquierda (Fórmulas y Consola)
+# Fórmulas: Arriba a la izquierda
+formulas_rect = pygame.Rect(15, 15, 550, 390)
 
-Newton = None
-Halley = None
-Chebyshev = None
+# Consola: Debajo de las fórmulas
+console_rect = pygame.Rect(15, 420, 550, 325)
 
-# Cargar imágenes de fórmulas
-FormulasNewton = None
-FormulasHalley = None
-FormulasChebyshev = None
+# Columna Derecha (Fractal y Botones)
+# Fractal: Ocupa gran parte de la derecha
+fractal_rect = pygame.Rect(580, 15, 605, 450)
 
-if (os.path.isfile("fractal_Newton.png")):
-	Newton = pygame.image.load("fractal_Newton.png").convert_alpha()
-	NewtonScaled = pygame.transform.smoothscale(Newton, (12800, 9600))
-else: print("No hay fractal por Newton")
+# Botones: Debajo del fractal
+# Fila 1
+button_rectN = pygame.Rect(650, 600, 200, 50)
+button_rectH = pygame.Rect(900, 600, 200, 50)
+# Fila 2
+button_rectC = pygame.Rect(650, 670, 200, 50)
+button_rectQ = pygame.Rect(900, 670, 200, 50)
 
-if (os.path.isfile("formulas_Newton.png")):
-	FormulasNewton = pygame.image.load("formulas_Newton.png").convert_alpha()
-	FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (12800, 9600))
-	FormulasActual = FormulasNewtonScaled
-else: print("No hay fórmulas por Newton")
+#TITULO
+title_surf = font_title.render("AM GRUPO 4.4", True, BLACK)
+title_rect = title_surf.get_rect(center=(width // 1.375, 540))
+title_bg_rect = title_rect.inflate(0, 2)
 
-if (os.path.isfile("fractal_Halley.png")):
-	Halley = pygame.image.load("fractal_Halley.png").convert_alpha()
-	HalleyScaled = pygame.transform.smoothscale(Halley, (256, 256))
-else: print("No hay fractal por Halley")
+# Textos de botones
+button_textN = font_btn.render("NEWTON", True, BLACK)
+button_textH = font_btn.render("HALLEY", True, BLACK)
+button_textC = font_btn.render("CHEBYSHEV", True, BLACK)
+button_textQ = font_btn.render("SALIR", True, BLACK)
 
-if (os.path.isfile("fractal_Chebyshev.png")):
-	Chebyshev = pygame.image.load("fractal_Chebyshev.png").convert_alpha()
-	ChebyshevScaled = pygame.transform.smoothscale(Chebyshev, (256, 256))
-else: print("No hay fractal por Chebyshev")
 
-fractal_rect = pygame.Rect(605, 110, 25.600, 19200)
-
+# --- ESTADO GLOBAL ---
 ImagenActual = None
 FormulasActual = None
 
+def scale_keep_aspect(image, target_rect):
+    """Escala una imagen manteniendo su relación de aspecto para que quepa dentro de target_rect."""
+    img_w, img_h = image.get_size()
+    target_w, target_h = target_rect.width, target_rect.height
+
+    ratio_img = img_w / img_h
+    ratio_target = target_w / target_h
+
+    if ratio_img > ratio_target:
+        # La imagen es más ancha que el target (ajustar por ancho)
+        new_w = target_w
+        new_h = int(new_w / ratio_img)
+    else:
+        # La imagen es más alta que el target (ajustar por alto)
+        new_h = target_h
+        new_w = int(new_h * ratio_img)
+
+    return pygame.transform.smoothscale(image, (new_w, new_h))
+
+# Carga inicial si existen archivos por defecto (opcional, por si se reinicia)
+def try_load_initial():
+    global ImagenActual, FormulasActual
+    # Prioridad: Newton > Halley > Chebyshev
+    for name in ["Newton", "Halley", "Chebyshev"]:
+        f_img = f"fractal_{name}.png"
+        form_img = f"formulas_{name}.png"
+        if os.path.isfile(f_img):
+            try:
+                img = pygame.image.load(f_img).convert_alpha()
+                ImagenActual = scale_keep_aspect(img, fractal_rect)
+            except: pass
+        
+        if os.path.isfile(form_img):
+            try:
+                img = pygame.image.load(form_img).convert_alpha()
+                FormulasActual = scale_keep_aspect(img, formulas_rect)
+            except: pass
+        
+        if ImagenActual: break
+
+try_load_initial()
 
 
-
-
-
-#TITULO
-title_surf = font2.render("AM GRUPO 4.4", True, BLACK)
-title_rect = title_surf.get_rect(center=(width // 1.37, 560))
-title_bg_rect = title_rect.inflate(0, 2)
-
-
-# Rect para fórmulas (debajo del título, centrado)
-formulas_rect = pygame.Rect(0, 0, 560, 180)
-formulas_rect.top = 200
-formulas_rect.centerx = width // 2 + 250
-
-
-
-
-# Botones de scripts (posiciones separadas para que no se solapen)
-button_textN = font.render("NEWTON", True, BLACK)
-button_rectN = pygame.Rect(0, 0, 250, 50)
-button_rectN.right = width - 340
-button_rectN.centery = height // 2 + 255
-
-button_textH = font.render("HALLEY", True, BLACK)
-button_rectH = pygame.Rect(0, 0, 250, 50)
-button_rectH.right = width - 60
-button_rectH.centery = height // 2 + 255
-
-button_textC = font.render("CHEBYSHEV", True, BLACK)
-button_rectC = pygame.Rect(0, 0, 250, 50)
-button_rectC.right = width - 340
-button_rectC.centery = height // 2 + 310
-
-# Botón QUIT 
-button_textQ = font.render("SALIR", True, BLACK)
-button_rectQ = pygame.Rect(0, 0, 200, 35)
-button_rectQ.right = width - 60
-button_rectQ.centery = height // 2 + 310
-
-#Ajustes para la consola
-
+# --- CONSOLA ---
 console_lines = deque(maxlen=200)
 console_lock = threading.Lock()
 
-
 def append_console(line: str):
-    """Añade líneas al buffer de la consola con line-wrapping por anchura del rect."""
+    """Añade líneas al buffer de la consola con line-wrapping."""
     with console_lock:
-        # calcular ancho aproximado en caracteres según fuente y rect
         char_w = max(1, console_font.size("M")[0])
         max_chars = max(10, (console_rect.width - 16) // char_w)
         for sub in line.rstrip("\n").splitlines():
-            # usar textwrap para hacer wrap por caracteres aproximados
             wrapped = textwrap.wrap(sub, width=max_chars) or [""]
             for w in wrapped:
                 console_lines.append(w)
 
-
-def run_script_capture(name: str, example: str = None, show: bool = False):
-    """Lanza un script en un proceso hijo sin buffering y captura su salida en tiempo real.
-       Borra la consola al iniciar un nuevo script."""
+def run_script_capture(script_name: str, example: str = None, show: bool = False):
+    """Ejecuta el script y actualiza las imágenes de forma genérica."""
     with console_lock:
         console_lines.clear()
 
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
 
-    # construir comando con argumentos opcionales
-    cmd = [sys.executable, "-u", name]
+    cmd = [sys.executable, "-u", script_name]
     if example is not None:
         cmd += ["--example", example]
     if show:
@@ -169,14 +162,14 @@ def run_script_capture(name: str, example: str = None, show: bool = False):
             env=env,
         )
     except Exception as e:
-        append_console(f"Error al iniciar {name}: {e}")
+        append_console(f"Error al iniciar {script_name}: {e}")
         return
 
     def reader():
-        global Newton, Halley, Chebyshev, ImagenActual
-        global FormulasNewton, FormulasHalley, FormulasChebyshev, FormulasActual
-        label = f"{name} ({example})" if example else name
+        global ImagenActual, FormulasActual
+        label = f"{script_name} ({example})" if example else script_name
         append_console(f"--- Ejecutando {label} ---")
+        
         try:
             while True:
                 line = proc.stdout.readline()
@@ -186,125 +179,175 @@ def run_script_capture(name: str, example: str = None, show: bool = False):
                     append_console(line)
         except Exception as e:
             append_console(f"Lectura interrumpida: {e}")
+        
         ret = proc.wait()
         append_console(f"--- {label} finalizó (code {ret}) ---")
 
-        # Recargar la imagen solo si el script terminó bien
         if ret == 0:
-            if name == "Newton.py" and os.path.isfile("fractal_Newton.png"):
-                Newton = pygame.image.load("fractal_Newton.png").convert_alpha()
-                NewtonScaled = pygame.transform.smoothscale(Newton, (400, 300))
-                ImagenActual = NewtonScaled
-                # Cargar fórmulas si existen
-                if os.path.isfile("formulas_Newton.png"):
-                    FormulasNewton = pygame.image.load("formulas_Newton.png").convert_alpha()
-                    FormulasNewtonScaled = pygame.transform.smoothscale(FormulasNewton, (540, 180))
-                    FormulasActual = FormulasNewtonScaled
-                    
-            elif name == "Halley.py" and os.path.isfile("fractal_Halley.png"):
-                Halley = pygame.image.load("fractal_Halley.png").convert_alpha()
-                HalleyScaled = pygame.transform.smoothscale(Halley, (256, 256))
-                ImagenActual = HalleyScaled
-                
-            elif name == "Chebyshev.py" and os.path.isfile("fractal_Chebyshev.png"):
-                Chebyshev = pygame.image.load("fractal_Chebyshev.png").convert_alpha()
-                ChebyshevScaled = pygame.transform.smoothscale(Chebyshev, (256, 256))
-                ImagenActual = ChebyshevScaled
+            # Determinar nombres de archivo basados en el script (ej: Newton.py -> Newton)
+            base_name = script_name.replace(".py", "")
+            fractal_file = f"fractal_{base_name}.png"
+            formulas_file = f"formulas_{base_name}.png"
+
+            # Cargar Fractal
+            if os.path.isfile(fractal_file):
+                try:
+                    # Forzar recarga limpiando caché interna de pygame si existiera (aunque load suele leer de disco)
+                    # Una técnica es cargar como bytes primero si hay problemas de bloqueo, pero aquí es simple.
+                    img = pygame.image.load(fractal_file).convert_alpha()
+                    ImagenActual = scale_keep_aspect(img, fractal_rect)
+                    append_console(f"Fractal actualizado: {fractal_file}")
+                except Exception as e:
+                    append_console(f"Error cargando fractal: {e}")
+
+            # Cargar Fórmulas
+            if os.path.isfile(formulas_file):
+                try:
+                    img = pygame.image.load(formulas_file).convert_alpha()
+                    FormulasActual = scale_keep_aspect(img, formulas_rect)
+                    append_console(f"Fórmulas actualizadas: {formulas_file}")
+                except Exception as e:
+                    append_console(f"Error cargando fórmulas: {e}")
+            else:
+                FormulasActual = None
 
     threading.Thread(target=reader, daemon=True).start()
-    
+
 
 if __name__ == "__main__":
     clock = pygame.time.Clock()
+    
+    # Popups para cada método
+    # Aunque Halley y Chebyshev no tengan ejemplos definidos en sus scripts aún,
+    # dejamos la estructura lista.
+    
     popup_newton = MethodPopup(
-        screen=screen,
-        font=font,
-        title="Opciones de Newton",
-        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"],
-        colors=colors,
+        screen=screen, font=font, title="Opciones Newton",
+        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"], colors=colors
     )
     
-    # colores iniciales
+    popup_halley = MethodPopup(
+        screen=screen, font=font, title="Opciones Halley",
+        options=["Estándar"], colors=colors
+    )
+    
+    popup_chebyshev = MethodPopup(
+        screen=screen, font=font, title="Opciones Chebyshev",
+        options=["Estándar"], colors=colors
+    )
+
     while True:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+            # Manejo de eventos de popups
             if popup_newton.visible:
                 popup_newton.handle_event(event)
-                continue  # no dejes pasar el evento
+                continue
+            if popup_halley.visible:
+                popup_halley.handle_event(event)
+                continue
+            if popup_chebyshev.visible:
+                popup_chebyshev.handle_event(event)
+                continue
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # Botón Newton
                 if button_rectN.collidepoint(event.pos):
-                    def on_ok(example, show_plot, ver_en_gui):
+                    def on_ok_newton(example, show_plot, gui):
                         run_script_capture("Newton.py", example=example, show=show_plot)
-                    popup_newton.open(on_ok)
+                    popup_newton.open(on_ok_newton)
+                
+                # Botón Halley
                 elif button_rectH.collidepoint(event.pos):
-                    run_script_capture("Halley.py")
+                    def on_ok_halley(example, show_plot, gui):
+                        # Si el script soportara ejemplos, se pasarían aquí
+                        run_script_capture("Halley.py", show=show_plot)
+                    popup_halley.open(on_ok_halley)
+                
+                # Botón Chebyshev
                 elif button_rectC.collidepoint(event.pos):
-                    run_script_capture("Chebyshev.py")
+                    def on_ok_chebyshev(example, show_plot, gui):
+                        run_script_capture("Chebyshev.py", show=show_plot)
+                    popup_chebyshev.open(on_ok_chebyshev)
+                
+                # Botón Salir
                 elif button_rectQ.collidepoint(event.pos):
                     pygame.quit()
                     sys.exit()
 
-        # Dibujar fondo
+        # --- DIBUJADO ---
         screen.fill(AZULDEBIAN)
-        
-        # Determinar colores hover JUSTO antes de dibujar
+
+        # Colores Hover
         mouse_pos = pygame.mouse.get_pos()
-        COLORN = RED if button_rectN.collidepoint(mouse_pos) else BLUE
-        COLORH = RED if button_rectH.collidepoint(mouse_pos) else GREEN
-        COLORC = RED if button_rectC.collidepoint(mouse_pos) else GREY
-        COLORQUIT = RED if button_rectQ.collidepoint(mouse_pos) else YELLOW
-        
-        # Consola: fondo claro y borde
+        cn = RED if button_rectN.collidepoint(mouse_pos) else BLUE
+        ch = RED if button_rectH.collidepoint(mouse_pos) else GREEN
+        cc = RED if button_rectC.collidepoint(mouse_pos) else GREY
+        cq = RED if button_rectQ.collidepoint(mouse_pos) else YELLOW
+
+        # 1. Fórmulas
+        pygame.draw.rect(screen, WHITE, formulas_rect)
+        pygame.draw.rect(screen, BLACK, formulas_rect, 2)
+        if FormulasActual:
+            screen.blit(FormulasActual, formulas_rect)
+        else:
+            # Texto placeholder si no hay fórmulas
+            txt = font.render("Sin fórmulas cargadas", True, GREY)
+            screen.blit(txt, txt.get_rect(center=formulas_rect.center))
+
+        # 2. Consola
         pygame.draw.rect(screen, GREY, console_rect)
         pygame.draw.rect(screen, BLACK, console_rect, 2)
         
         with console_lock:
-            visible_lines = list(console_lines)[- (console_rect.height // 20) :]
-
-        y = console_rect.top + 8
+            # Mostrar últimas líneas
+            visible_lines = list(console_lines)[-18:] # aprox 18 lineas caben
+        
+        cy = console_rect.top + 5
         for line in visible_lines:
             surf = console_font.render(line, True, BLACK)
-            screen.blit(surf, (console_rect.left + 8, y))
-            y += console_font.get_linesize()
-        
-        
-		
-        # Dibujar botones
-        pygame.draw.rect(screen, COLORN, button_rectN)
-        screen.blit(button_textN, button_textN.get_rect(center=button_rectN.center))
+            screen.blit(surf, (console_rect.left + 5, cy))
+            cy += console_font.get_linesize()
 
-        pygame.draw.rect(screen, COLORH, button_rectH)
-        screen.blit(button_textH, button_textH.get_rect(center=button_rectH.center))
+        # 3. Fractal
+        # Dibujar un marco o fondo para el fractal
+        pygame.draw.rect(screen, BLACK, fractal_rect, 2)
+        if ImagenActual:
+            # Centrar la imagen en el rect
+            img_rect = ImagenActual.get_rect(center=fractal_rect.center)
+            screen.blit(ImagenActual, img_rect)
+        else:
+            # Placeholder
+            pygame.draw.rect(screen, (50, 50, 50), fractal_rect)
+            txt = font.render("Fractal no generado", True, WHITE)
+            screen.blit(txt, txt.get_rect(center=fractal_rect.center))
 
-        pygame.draw.rect(screen, COLORC, button_rectC)
-        screen.blit(button_textC, button_textC.get_rect(center=button_rectC.center))
-
-        pygame.draw.rect(screen, COLORQUIT, button_rectQ)
-        screen.blit(button_textQ, button_textQ.get_rect(center=button_rectQ.center))
-        
+        # 4. Botones
+        for rect, color, text in [
+            (button_rectN, cn, button_textN),
+            (button_rectH, ch, button_textH),
+            (button_rectC, cc, button_textC),
+            (button_rectQ, cq, button_textQ)
+        ]:
+            pygame.draw.rect(screen, color, rect, border_radius=8)
+            pygame.draw.rect(screen, BLACK, rect, 2, border_radius=8)
+            
+            screen.blit(text, text.get_rect(center=rect.center))
+            
         pygame.draw.rect(screen, AZULDEBIAN, title_bg_rect)
         screen.blit(title_surf, title_rect)
-        
-        # Rect de fórmulas (siempre visible con borde)
-        pygame.draw.rect(screen, WHITE, formulas_rect)
-        pygame.draw.rect(screen, BLACK, formulas_rect, 2)
-        
-        # Mostrar fórmulas dentro del rect si existen
-        if FormulasActual is not None:
-            screen.blit(FormulasActual, formulas_rect)
-        
-        if ImagenActual is not None:
-            screen.blit(ImagenActual, fractal_rect)
 
-        # Dibujar popup de Newton si está visible
+        # 5. Popups (dibujar encima de todo)
         popup_newton.draw()
+        popup_halley.draw()
+        popup_chebyshev.draw()
 
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(120)
 
 
 

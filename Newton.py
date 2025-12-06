@@ -14,7 +14,7 @@ if __name__ == "__main__":
 #Definimos a función cuxas raíces queremos aproximar (cada grupo usará unha función distinta):
 
 z=Symbol('z')
-f=z/(z**2+z)**(1/2)
+f=z/(z**2+z)**(1/2) #Valor generico, se sustituye conlos ejemplos
 
 
 #Definimos a derivada da función anterior. Se fose necesario para algún método
@@ -47,10 +47,13 @@ npuntos=300
 
 
 if args.example == "Ejemplo 1":
+    f=z/(z**2+z)**(1/2)
     npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5  # tus valores originales
 elif args.example == "Ejemplo 2":
+    f=z/(z**2+z)**(1)
     npuntos = 500; a, b, c, d = -1.2, 1, -0.8, 0.8
 elif args.example == "Ejemplo 3":
+    f=z/(z**2+z)**(2)
     npuntos = 800; a, b, c, d = -2.0, 1.5, -1.2, 1.2
         
         
@@ -112,7 +115,9 @@ if (args.show is True):
     plt.show()
 
 # Generar imagen con fórmulas legibles
-fig_formulas, ax_formulas = plt.subplots(figsize=(7.2, 2.4), facecolor='white')
+# Ajustamos el tamaño para que sea más vertical (aprox 550x380 px)
+# Aumentamos DPI para mejor resolución, main.py se encargará de escalar hacia abajo (supersampling)
+fig_formulas, ax_formulas = plt.subplots(figsize=(5.5, 3.8), facecolor='white')
 ax_formulas.axis('off')
 ax_formulas.set_xlim(0, 1)
 ax_formulas.set_ylim(0, 1)
@@ -125,19 +130,24 @@ g_latex = sp.latex(g)
 # Crear texto con fórmulas
 formulas_text = (
     r"$\mathbf{Método\ de\ Newton}$" "\n\n"
-    r"$\mathbf{Función:}\ f(z) = " + f_latex + r"$" "\n\n"
-    r"$\mathbf{Derivada:}\ f'(z) = " + derf_latex + r"$" "\n\n"
-    r"$\mathbf{Iteración:}\ g(z) = " + g_latex + r"$"
+    r"$\mathbf{Función:}$" "\n"
+    r"$f(z) = " + f_latex + r"$" "\n\n"
+    r"$\mathbf{Derivada:}$" "\n"
+    r"$f'(z) = " + derf_latex + r"$" "\n\n"
+    r"$\mathbf{Iteración:}$" "\n"
+    r"$g(z) = " + g_latex + r"$"
 )
 
 ax_formulas.text(0.5, 0.5, formulas_text, 
                  ha='center', va='center', 
-                 fontsize=13, 
+                 fontsize=14, 
                  transform=ax_formulas.transAxes)
 
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-plt.savefig('formulas_Newton.png', dpi=2000, bbox_inches='tight', pad_inches=0, facecolor='white')
+plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+# DPI aumentado a 300 para alta resolución
+plt.savefig('formulas_Newton.png', dpi=300, bbox_inches='tight', pad_inches=0.1, facecolor='white')
 
 plt.close(fig_formulas)
+plt.close('all') # Asegurar que se cierran todas las figuras y se liberan los archivos
 
 print('Imaxe de fórmulas gardada en: formulas_Newton.png')
