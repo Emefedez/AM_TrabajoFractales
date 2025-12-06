@@ -59,26 +59,27 @@ class MethodPopup:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Verificar en orden: checkboxes, opciones, OK
-            if self.chk_rect.collidepoint(event.pos):
-                self.show_plot = not self.show_plot
+            # NUEVO: Si el clic es FUERA del popup, cerrarlo.
+            if not self.rect.collidepoint(event.pos):
+                self.close()
                 return
 
-            if self.gui_chk_rect.collidepoint(event.pos):
-                self.show_gui = not self.show_gui
+            # Lógica existente de botones internos
+            if self.ok_rect.collidepoint(event.pos):
+                if self.on_ok is not None:
+                    example = self.options[self.selected]
+                    self.on_ok(example, self.show_plot, True) # Asumimos GUI true por defecto
+                self.close()
+                return
+
+            if self.chk_rect.collidepoint(event.pos):
+                self.show_plot = not self.show_plot
                 return
 
             for i, r in enumerate(self.option_rects):
                 if r.collidepoint(event.pos):
                     self.selected = i
                     return
-
-            if self.ok_rect.collidepoint(event.pos):
-                if self.on_ok is not None:
-                    example = self.options[self.selected]
-                    self.on_ok(example, self.show_plot, self.show_gui)
-                self.close()
-                return
 
     def draw(self):
         if not self.visible:

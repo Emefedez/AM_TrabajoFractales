@@ -14,7 +14,7 @@ pygame.init()
 pygame.font.init()
 
 width, height = 1200, 760
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Visualizador de Fractales - by Emefedez")
         
 # Colores
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         popup_chebyshev.draw()
 
         pygame.display.flip()
-        clock.tick(10)
+        clock.tick(30)
 
 
 
