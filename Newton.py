@@ -32,16 +32,12 @@ b=1.5
 c=-1.5
 d=1.5
 
-
-
         
 #Número de puntos usados nos eixos OX e OY para representar o fractal: canto
 #maior sexa o número de puntos máis preciso sera o gráfico, pero tamén máis
 #tempo se necesitará para levar a cabo os cálculos.
 
 npuntos=300
-
-
 
 ################### NON MODIFICAR ESTA PARTE DO PROGRAMA #####################
 ##############################################################################
