@@ -106,7 +106,7 @@ ax_formulas.text(0.5, 0.5, formulas_text,
                  transform=ax_formulas.transAxes)
 
 plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
-plt.savefig('formulas_Newton.png', dpi=2000, bbox_inches='tight', pad_inches=0.1, facecolor='white')
+plt.savefig('formulas_Chebyshev.png', dpi=2000, bbox_inches='tight', pad_inches=0.1, facecolor='white')
 
 
 plt.close(fig_formulas)
