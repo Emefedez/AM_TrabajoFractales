@@ -348,7 +348,7 @@ if __name__ == "__main__":
         popup_chebyshev.draw()
 
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(30)
 
 
 
