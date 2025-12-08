@@ -17,8 +17,9 @@ z=Symbol('z')
 
 #Metodo de Newton
 
-# Os seguintes parámetros poden ser modificados co obxetivo de 
-#conseguir os mellores gráficos posibles: 
+f=(z**8) - 1
+derf=Derivative(f,z,1).doit()
+g=simplify(z-f/derf) 
 
 # Número máximo de iteracións para o método elexido:
 
@@ -26,22 +27,21 @@ maxiter=50
 
 #O fractal representarase no rectángulo [a,b]x[c,d]: 
 
-a=-1.1
-b=0.6
-c=-0.5
-d=0.5
+a=-1.5
+b=1.5
+c=-1.5
+d=1.5
 
-npuntos=300
+
 
         
 #Número de puntos usados nos eixos OX e OY para representar o fractal: canto
 #maior sexa o número de puntos máis preciso sera o gráfico, pero tamén máis
 #tempo se necesitará para levar a cabo os cálculos.
 
-f=(z**8) - 1
-npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5
-derf=Derivative(f,z,1).doit()
-g=simplify(z-f/derf)
+npuntos=300
+
+
 
 ################### NON MODIFICAR ESTA PARTE DO PROGRAMA #####################
 ##############################################################################
@@ -56,15 +56,23 @@ y=np.linspace(c,d,npuntos+1)
 
 for i in range(0,npuntos):
     for j in range(0,npuntos):
-        z = complex(x[i],y[j])
+        z_c = complex(x[i],y[j]) # Usar z_c para el valor de iteración
         n=0
-        while (n<maxiter and abs(ff(z))>tol):
-            if abs(gg(z))<1/tol:   
-               z=gg(z)
-               n=n+1
-            else:
-               break
-        fractal[npuntos-j,i]=float(n)  
+        while (n<maxiter and abs(ff(z_c))>tol):
+            try:
+                # El cálculo de la siguiente iteración es donde puede fallar
+                if abs(gg(z_c))<1/tol:   
+                   z_c=gg(z_c)
+                   n=n+1
+                else:
+                   # También se puede manejar como si fuera una no-convergencia
+                   break 
+            except ZeroDivisionError:
+                # Si hay división por cero, detenemos la iteración para este punto
+                print("Has intentado dividir por cero en la iteración: ")
+                print(n)
+                break 
+        fractal[npuntos-j,i]=float(n) # El valor n permanece como está al romperse el bucle  
 
 ##############################################################################
 ##############################################################################
