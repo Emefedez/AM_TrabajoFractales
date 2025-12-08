@@ -223,7 +223,7 @@ if __name__ == "__main__":
     
     popup_newton = MethodPopup(
         screen=screen, font=font, title="Opciones Newton",
-        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"], colors=colors
+        options=["Color Cíclico", "Color Secuencial", "Coolwarm"], colors=colors
     )
     
     popup_halley = MethodPopup(

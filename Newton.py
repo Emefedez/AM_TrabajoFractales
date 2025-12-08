@@ -12,29 +12,17 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
 #Definimos a función cuxas raíces queremos aproximar (cada grupo usará unha función distinta):
-
+#Aquí va el símbolo
 z=Symbol('z')
-f=z/(z**2+z)**(1/2) #Valor generico, se sustituye conlos ejemplos
-
-
-#Definimos a derivada da función anterior. Se fose necesario para algún método
-#definiríase de forma similar a segunda derivada.
-
-derf=Derivative(f,z,1).doit()
-
-#Definimos a fórmula do método que queremos implementar. Neste exemplo 
-#tratase do Método de Newton. Para implementar outro metodo debemos definir 
-# a fórmula correspondente:
 
 #Metodo de Newton
-g=simplify(z-f/derf)
 
 # Os seguintes parámetros poden ser modificados co obxetivo de 
 #conseguir os mellores gráficos posibles: 
 
 # Número máximo de iteracións para o método elexido:
 
-maxiter=30
+maxiter=50
 
 #O fractal representarase no rectángulo [a,b]x[c,d]: 
 
@@ -45,23 +33,15 @@ d=0.5
 
 npuntos=300
 
-
-if args.example == "Ejemplo 1":
-    f=z/(z**2+z)**(1/2)
-    npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5  # tus valores originales
-elif args.example == "Ejemplo 2":
-    f=z/(z**2+z)**(1)
-    npuntos = 500; a, b, c, d = -1.2, 1, -0.8, 0.8
-elif args.example == "Ejemplo 3":
-    f=z/(z**2+z)**(2)
-    npuntos = 800; a, b, c, d = -2.0, 1.5, -1.2, 1.2
-        
         
 #Número de puntos usados nos eixos OX e OY para representar o fractal: canto
 #maior sexa o número de puntos máis preciso sera o gráfico, pero tamén máis
 #tempo se necesitará para levar a cabo os cálculos.
 
-
+f=z/(z**8)-1
+npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5
+derf=Derivative(f,z,1).doit()
+g=simplify(z-f/derf)
 
 ################### NON MODIFICAR ESTA PARTE DO PROGRAMA #####################
 ##############################################################################
@@ -101,11 +81,16 @@ print(' ')
 
 #A continuación represéntase a imaxen fractal: recoméndase buscar unha gama de 
 #cores atractiva. 
+if args.example == "Color Cíclico":
+    plt.imshow(fractal,cmap='twilight_shifted', extent=(a, b, c, d))
+elif args.example == "Color Secuecial":
+    plt.imshow(fractal,cmap='magma', extent=(a, b, c, d))
+elif args.example == "Coolwarm":
+    plt.imshow(fractal,cmap='coolwarm', extent=(a, b, c, d))
 
-plt.imshow(fractal,cmap='coolwarm', extent=(a, b, c, d))
-plt.colorbar()
-plt.xlabel("x")
-plt.ylabel("y")
+    plt.colorbar()
+    plt.xlabel("x")
+    plt.ylabel("y")
 
 
 plt.savefig('fractal_Newton.png', dpi=2000)
