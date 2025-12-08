@@ -38,7 +38,7 @@ npuntos=300
 #maior sexa o número de puntos máis preciso sera o gráfico, pero tamén máis
 #tempo se necesitará para levar a cabo os cálculos.
 
-f=z/(z**8)-1
+f=(z**8) - 1
 npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5
 derf=Derivative(f,z,1).doit()
 g=simplify(z-f/derf)
@@ -83,8 +83,8 @@ print(' ')
 #cores atractiva. 
 if args.example == "Color Cíclico":
     plt.imshow(fractal,cmap='twilight_shifted', extent=(a, b, c, d))
-elif args.example == "Color Secuecial":
-    plt.imshow(fractal,cmap='magma', extent=(a, b, c, d))
+elif args.example == "Color Secuencial":
+    plt.imshow(fractal,cmap='seismic', extent=(a, b, c, d))
 elif args.example == "Coolwarm":
     plt.imshow(fractal,cmap='coolwarm', extent=(a, b, c, d))
 
