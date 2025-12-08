@@ -1,4 +1,4 @@
-import pygame
+import pygame #Instala pygame-ce
 import sys
 import subprocess
 import threading
@@ -228,12 +228,12 @@ if __name__ == "__main__":
     
     popup_halley = MethodPopup(
         screen=screen, font=font, title="Opciones Halley",
-        options=["Estándar"], colors=colors
+        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"], colors=colors
     )
     
     popup_chebyshev = MethodPopup(
         screen=screen, font=font, title="Opciones Chebyshev",
-        options=["Estándar"], colors=colors
+        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"], colors=colors
     )
 
     while True:
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         popup_chebyshev.draw()
 
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(60)
 
 
 
