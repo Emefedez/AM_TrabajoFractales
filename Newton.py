@@ -12,7 +12,9 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
 #Definimos a función cuxas raíces queremos aproximar (cada grupo usará unha función distinta):
+
 #Aquí va el símbolo
+
 z=Symbol('z')
 
 #Metodo de Newton
@@ -31,7 +33,6 @@ a=-1.5
 b=1.5
 c=-1.5
 d=1.5
-
         
 #Número de puntos usados nos eixos OX e OY para representar o fractal: canto
 #maior sexa o número de puntos máis preciso sera o gráfico, pero tamén máis

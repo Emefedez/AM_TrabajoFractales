@@ -27,12 +27,15 @@ maxiter = 30
 a, b, c, d = -1.1, 0.6, -0.5, 0.5
 npuntos = 300
 
-if args.example == "Color Cíclico":
-    plt.imshow(fractal,cmap='twilight_shifted', extent=(a, b, c, d))
-elif args.example == "Color Secuencial":
-    plt.imshow(fractal,cmap='seismic', extent=(a, b, c, d))
-elif args.example == "Coolwarm":
-    plt.imshow(fractal,cmap='coolwarm', extent=(a, b, c, d))
+if args.example == "Ejemplo 1":
+    f = z/(z**2+z)**(1/2)
+    npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5
+elif args.example == "Ejemplo 2":
+    f = z**4 - 1  # Función clásica para fractales
+    npuntos = 500; a, b, c, d = -1.5, 1.5, -1.5, 1.5
+elif args.example == "Ejemplo 3":
+    f = z**3 - 2*z + 2  # Función con comportamiento interesante
+    npuntos = 600; a, b, c, d = -2.5, 2.5, -2.5, 2.5
 
 # Resto del código (igual que Newton.py)
 ff = lambdify(z, f, "numpy")
