@@ -19,8 +19,8 @@ f = z/(z**2+z)**(1/2)  # Función por defecto
 derf = Derivative(f, z, 1).doit()
 der2f = Derivative(f, z, 2).doit()
 
-#Método de Halley
-g = simplify(z - (2*f*derf)/(2*derf**2 - f*der2f))
+#Método de Chebyshev
+g = simplify(z - f/derf - (f**2*der2f)/(2*derf**3))
 
 # Parámetros modificables
 maxiter = 30
@@ -34,8 +34,8 @@ elif args.example == "Ejemplo 2":
     f = z**4 - 1  # Función clásica para fractales
     npuntos = 500; a, b, c, d = -1.5, 1.5, -1.5, 1.5
 elif args.example == "Ejemplo 3":
-    f = z**3 - 2*z + 2  # Función con comportamiento interesante
-    npuntos = 600; a, b, c, d = -2.5, 2.5, -2.5, 2.5
+    f = sp.sin(z) + z**2/2  # Función trascendente interesante
+    npuntos = 700; a, b, c, d = -3.0, 3.0, -3.0, 3.0
 
 # Resto del código (igual que Newton.py)
 ff = lambdify(z, f, "numpy")
@@ -59,21 +59,21 @@ for i in range(0, npuntos):
         fractal[npuntos-j, i] = float(n)  
 
 print(' ') 
-print('MÉTODO DE HALLEY')       
+print('MÉTODO DE CHEBYSHEV')       
 print('A función utilizada é: f(z)=', f)
 print('')
 print('A súa primeira derivada é: f\'(z)=', derf)
 print('A súa segunda derivada é: f\'\'(z)=', der2f)
 print(' ')
-print('A función do método de Halley é: g(z)=', g)
+print('A función do método de Chebyshev é: g(z)=', g)
 print(' ')
 
-plt.imshow(fractal, cmap='viridis', extent=(a, b, c, d))
+plt.imshow(fractal, cmap='plasma', extent=(a, b, c, d))
 plt.colorbar()
 plt.xlabel("x")
 plt.ylabel("y")
 
-plt.savefig('fractal_Halley.png', dpi=2000)
+plt.savefig('fractal_Chebyshev.png', dpi=2000)
 if args.show:
     plt.show()
 
@@ -89,7 +89,7 @@ der2f_latex = sp.latex(der2f)
 g_latex = sp.latex(g)
 
 formulas_text = (
-    r"$\mathbf{Método\ de\ Halley}$" "\n\n"
+    r"$\mathbf{Método\ de\ Chebyshev}$" "\n\n"
     r"$\mathbf{Función:}$" "\n"
     r"$f(z) = " + f_latex + r"$" "\n\n"
     r"$\mathbf{Primera\ derivada:}$" "\n"
@@ -106,7 +106,7 @@ ax_formulas.text(0.5, 0.5, formulas_text,
                  transform=ax_formulas.transAxes)
 
 plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
-plt.savefig('formulas_Halley.png', dpi=2000, bbox_inches='tight', pad_inches=0.1, facecolor='white')
+plt.savefig('formulas_Chebyshev.png', dpi=2000, bbox_inches='tight', pad_inches=0.1, facecolor='white')
 
 
 plt.close(fig_formulas)

@@ -233,7 +233,7 @@ if __name__ == "__main__":
     
     popup_chebyshev = MethodPopup(
         screen=screen, font=font, title="Opciones Chebyshev",
-        options=["Ejemplo 1", "Ejemplo 2", "Ejemplo 3"], colors=colors
+        options=["Color Cíclico", "Color Secuencial", "Coolwarm"], colors=colors
     )
 
     while True:
@@ -243,15 +243,12 @@ if __name__ == "__main__":
                 pygame.quit()
                 sys.exit()
 
-            # Manejo de eventos de popups
-            if popup_newton.visible:
-                popup_newton.handle_event(event)
+            # Manejo de eventos de popups: solo hacemos continue si el popup consumió el evento.
+            if popup_newton.visible and popup_newton.handle_event(event):
                 continue
-            if popup_halley.visible:
-                popup_halley.handle_event(event)
+            if popup_halley.visible and popup_halley.handle_event(event):
                 continue
-            if popup_chebyshev.visible:
-                popup_chebyshev.handle_event(event)
+            if popup_chebyshev.visible and popup_chebyshev.handle_event(event):
                 continue
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -261,17 +258,16 @@ if __name__ == "__main__":
                         run_script_capture("Newton.py", example=example, show=show_plot)
                     popup_newton.open(on_ok_newton)
                 
-                # Botón Halley
+                # Botón Halley (AHORA pasa example)
                 elif button_rectH.collidepoint(event.pos):
                     def on_ok_halley(example, show_plot, gui):
-                        # Si el script soportara ejemplos, se pasarían aquí
-                        run_script_capture("Halley.py", show=show_plot)
+                        run_script_capture("Halley.py", example=example, show=show_plot)
                     popup_halley.open(on_ok_halley)
                 
-                # Botón Chebyshev
+                # Botón Chebyshev (AHORA pasa example)
                 elif button_rectC.collidepoint(event.pos):
                     def on_ok_chebyshev(example, show_plot, gui):
-                        run_script_capture("Chebyshev.py", show=show_plot)
+                        run_script_capture("Chebyshev.py", example=example, show=show_plot)
                     popup_chebyshev.open(on_ok_chebyshev)
                 
                 # Botón Salir

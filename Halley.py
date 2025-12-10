@@ -12,17 +12,20 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
 #Definimos a función cuxas raíces queremos aproximar
-z=Symbol('z')
-f=(z**8) - 1
+z = Symbol('z')
+f = (z**8) - 1  # Función por defecto
+
+#Definimos as derivadas da función
 derf = Derivative(f, z, 1).doit()
 der2f = Derivative(f, z, 2).doit()
+
+#Método de Halley
 g = simplify(z - (2*f*derf)/(2*derf**2 - f*der2f))
 
 # Parámetros modificables
-maxiter = 30
+maxiter = 50
 a, b, c, d = -2, 2, -2, 2
-npuntos = 300
-
+npuntos = 1000
 
 
 # Resto del código (igual que Newton.py)
@@ -56,7 +59,13 @@ print(' ')
 print('A función do método de Halley é: g(z)=', g)
 print(' ')
 
-plt.imshow(fractal, cmap='viridis', extent=(a, b, c, d))
+if args.example == "Color Cíclico":
+    plt.imshow(fractal, cmap='viridis', extent=(a, b, c, d))
+elif args.example == "Color Secuencial":
+    plt.imshow(fractal,cmap='seismic', extent=(a, b, c, d))
+elif args.example == "Coolwarm":
+    plt.imshow(fractal,cmap='coolwarm', extent=(a, b, c, d))
+    
 plt.colorbar()
 plt.xlabel("x")
 plt.ylabel("y")
