@@ -12,18 +12,30 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
 #Definimos a función cuxas raíces queremos aproximar
-z=Symbol('z')
-f=(z**8) - 1
+z = Symbol('z')
+f = z/(z**2+z)**(1/2)  # Función por defecto
+
+#Definimos as derivadas da función
 derf = Derivative(f, z, 1).doit()
 der2f = Derivative(f, z, 2).doit()
+
+#Método de Halley
 g = simplify(z - (2*f*derf)/(2*derf**2 - f*der2f))
 
 # Parámetros modificables
 maxiter = 30
-a, b, c, d = -2, 2, -2, 2
+a, b, c, d = -1.1, 0.6, -0.5, 0.5
 npuntos = 300
 
-
+if args.example == "Ejemplo 1":
+    f = z/(z**2+z)**(1/2)
+    npuntos = 300; a, b, c, d = -1.1, 0.6, -0.5, 0.5
+elif args.example == "Ejemplo 2":
+    f = z**4 - 1  # Función clásica para fractales
+    npuntos = 500; a, b, c, d = -1.5, 1.5, -1.5, 1.5
+elif args.example == "Ejemplo 3":
+    f = z**3 - 2*z + 2  # Función con comportamiento interesante
+    npuntos = 600; a, b, c, d = -2.5, 2.5, -2.5, 2.5
 
 # Resto del código (igual que Newton.py)
 ff = lambdify(z, f, "numpy")
@@ -99,4 +111,3 @@ plt.savefig('formulas_Halley.png', dpi=2000, bbox_inches='tight', pad_inches=0.1
 
 plt.close(fig_formulas)
 plt.close('all')
-
